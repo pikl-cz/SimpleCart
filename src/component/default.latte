@@ -1,0 +1,39 @@
+{snippet QuickList}
+	{if count($namespaces) > 0}
+		<h3>Objednáno</h3>
+
+		{var $totalPrice = 0}
+
+		{foreach $namespaces as $key_nmspc => $nmspc}
+			<strong>{$key_nmspc}</strong>
+			<table class="table table-striped">
+				<thead>
+				<tr>
+					<th>Počet</th>
+					<th>ID</th>
+					<th>Cena</th>
+					<th>Odebrat</th>
+				</tr>
+				</thead>
+				<tbody>
+				{foreach $nmspc as $key_item => $item}
+					<tr>
+						<td>{$item->count}krát</td>
+						<td><a href="{plink Product:detail id => $item->id}">{$item->id}</a></td>
+						<td>{$item->price|number:0:',':' '}&nbsp;Kč</td>
+						<td><a href="{plink this do => removeFromCart, namespace => $key_nmspc, id => $item->id}" class="ajax" title="Odebrat">X</a></td>
+						{var $totalPrice += ($item->price * $item->count)}
+					</tr>
+				{/foreach}
+				</tbody>
+			</table>
+		{/foreach}
+		<hr>
+		Cena celkem <span>{$totalPrice|number:0:',':' '} ,-Kč</span><br>
+
+		<a href="{plink Cart:list do => emptyCart}" class="ajax">Vyprázdnit!</a>
+		<a href="{plink Cart:list}">Do košíku</a>
+	{else}
+		<a href="{plink Cart:list}">Košík: -</a>
+	{/if}
+{/snippet}
