@@ -42,7 +42,7 @@ final class Control extends \Nette\Application\UI\Control
 		{
 			$this->templateFile = $filePath;
 		} else {
-			throw new \Exception('Custom template doesn´t exist.');
+			throw new \Exception('Custom template doesn´t exist (' . $filePath . ').');
 		}
 
 		return $this;

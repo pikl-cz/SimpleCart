@@ -82,6 +82,23 @@ final class Cart
 			$old = $namespace[$item->id];
 			$newCount = (int) $old->count + (int) $item->count;
 			$old->count = $newCount;
+			/*
+			 * Variants
+			 */
+			if (!empty($item->variant))
+			{
+				$variants = $this->cart->list[$item->namespace][$item->id]->variant;
+				foreach ($item->variant as $variant => $count)
+				{
+					if(array_key_exists($variant, $variants))
+					{
+						$this->cart->list[$item->namespace][$item->id]->variant[$variant] = $this->cart->list[$item->namespace][$item->id]->variant[$variant] + $item->count;
+					} else {
+						$this->cart->list[$item->namespace][$item->id]->variant[$variant] = (int) $item->count;
+					}
+				}
+			}
+
 		} else {
 			$this->cart->list[$item->namespace][$item->id] = $item;
 		}
@@ -93,16 +110,25 @@ final class Cart
 	* Remove item
 	* @param \SimpleCart\Component\DefaultItem
 	*/
-	public function remove($item)
+	public function remove($item, $variant)
 	{
 		$item = $this->get($item);
+//		dump($this->cart->list['product']);
+//		dump($item);
+//		dump($variant);
+//		exit;
 		if ($item)
 		{
 			$namespace = $item->namespace;
-			unset($this->cart->list[$item->namespace][$item->id]);
-			if (count($this->cart->list[$namespace]) == 0)
+			
+			unset($this->cart->list[$item->namespace][$item->id]->variant[$variant]);
+			if (count($this->cart->list[$item->namespace][$item->id]->variant) == 0)
 			{
-				unset($this->cart->list[$item->namespace]);
+				unset($this->cart->list[$item->namespace][$item->id]);
+				if (count($this->cart->list[$namespace]) == 0)
+				{
+					unset($this->cart->list[$item->namespace]);
+				}
 			}
 			return true;
 		} else {

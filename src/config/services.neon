@@ -1,2 +1,2 @@
 - SimpleCart\Repository\Cart
-- SimpleCart\Form\Order
+- SimpleCart\Form\OrderFormFactory

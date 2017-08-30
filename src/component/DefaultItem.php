@@ -17,6 +17,9 @@ class DefaultItem
 	public $price;
 
 	/** @var array */
+	public $variant = array();
+
+	/** @var array */
 	public $custom = array();
 
 	/**
@@ -25,12 +28,18 @@ class DefaultItem
 	 * @param int $count
 	 * @param float $price
 	 */
-	public function __construct($namespace, $id, $count = null, $price = null)
+	public function __construct($namespace, $id, $count = null, $price = null, $variant = null)
     {
 		$this->namespace = $namespace;
     	$this->id = $id;
 		$this->count = $count;
 		$this->price = $price;
+		if(!empty($variant))
+		{
+			$this->variant[$variant] = $count;
+		} else {
+			$this->variant['default'] = $count;
+		}
 	}
 
 	public function setNamespace($val)
@@ -51,6 +60,11 @@ class DefaultItem
 	public function setPrice($val)
 	{
 		$this->price = $val;
+	}
+
+	public function setVariant($val, $count)
+	{
+		$this->variant[$val] = (int) $count;
 	}
 
 	public function setCustom($val)
